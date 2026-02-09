@@ -1,0 +1,153 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct node {
+    int data;
+    struct node *next;
+};
+struct node *head = NULL;
+void insert_at_position();
+void insert_at_last();
+void delete_at_position();
+void display();
+
+int main() {
+    int choice;
+
+    while (1) {
+        printf("\n--- Linked List Menu ---\n");
+        printf("1. Insert at position\n");
+        printf("2. Insert at last\n");
+        printf("3. Delete from position\n");
+        printf("4. Display list\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                insert_at_position();
+                break;
+
+            case 2:
+                insert_at_last();
+                break;
+
+            case 3:
+                delete_at_position();
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                printf("Exiting program...\n");
+                exit(0);
+
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
+}
+void insert_at_position() {
+    struct node *newnode, *temp;
+    int pos, i = 1;
+
+    newnode = (struct node *)malloc(sizeof(struct node));
+    printf("Enter data: ");
+    scanf("%d", &newnode->data);
+
+    printf("Enter position: ");
+    scanf("%d", &pos);
+
+    if (pos == 1) {
+        newnode->next = head;
+        head = newnode;
+        return;
+    }
+
+    temp = head;
+    while (temp != NULL && i < pos - 1) {
+        temp = temp->next;
+        i++;
+    }
+
+    if (temp == NULL) {
+        printf("Invalid position!\n");
+        free(newnode);
+    } else {
+        newnode->next = temp->next;
+        temp->next = newnode;
+    }
+}
+
+void insert_at_last() {
+    struct node *newnode, *temp;
+
+    newnode = (struct node *)malloc(sizeof(struct node));
+    printf("Enter data: ");
+    scanf("%d", &newnode->data);
+    newnode->next = NULL;
+
+    if (head == NULL) {
+        head = newnode;
+        return;
+    }
+
+    temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = newnode;
+}
+
+void delete_at_position() {
+    struct node *temp, *prev;
+    int pos, i = 1;
+
+    if (head == NULL) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    printf("Enter position to delete: ");
+    scanf("%d", &pos);
+
+    if (pos == 1) {
+        temp = head;
+        head = head->next;
+        free(temp);
+        return;
+    }
+
+    temp = head;
+    while (temp != NULL && i < pos) {
+        prev = temp;
+        temp = temp->next;
+        i++;
+    }
+
+    if (temp == NULL) {
+        printf("Invalid position!\n");
+    } else {
+        prev->next = temp->next;
+        free(temp);
+    }
+}
+
+void display() {
+    struct node *temp;
+
+    if (head == NULL) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    temp = head;
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
